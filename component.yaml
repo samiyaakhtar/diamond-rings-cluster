@@ -1,0 +1,12 @@
+name: diamond-rings-cluster
+subcomponents:
+- name: diamond-rings
+  type: component
+  source: https://github.com/samiyaakhtar/diamond-rings-hld
+  method: git
+  branch: master
+- name: ring-operator
+  type: component
+  source: https://github.com/samiyaakhtar/ring-operator
+  method: git
+  branch: master
