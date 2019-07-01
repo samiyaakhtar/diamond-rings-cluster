@@ -1,4 +1,9 @@
 subcomponents:
+  diamond-rings:
+    subcomponents:
+      diamond-rings-master:
+        config:
+          buildId: "4638"
   hello-rings:
     subcomponents:
       hello-rings-master:
