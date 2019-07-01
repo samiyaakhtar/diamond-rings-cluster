@@ -4,3 +4,6 @@ subcomponents:
       hello-rings-master:
         config:
           buildId: "4627"
+      hello-rings-pr_diamond-rings-master-4454:
+        config:
+          buildId: "4629"
