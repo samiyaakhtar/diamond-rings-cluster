@@ -1,11 +1,6 @@
 subcomponents:
-  diamond-rings:
-    subcomponents:
-      diamond-rings-master:
-        config:
-          buildId: "4674"
   hello-bedrock:
     config:
       image:
-        repository: image.tag
+        repository: helloringsazure.azurecr.io
         tag: hello-bedrock-master-5059
