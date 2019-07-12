@@ -34,3 +34,8 @@ steps:
     COMMIT_MESSAGE: $(Build.SourceVersionMessage)
     REPO: $(MANIFEST_REPO)
     BRANCH_NAME: $(Build.SourceBranchName)
+
+- bash: |
+    echo "Verifying variables have been updated from first pipeline: $(commitId) $(p1)"
+    echo "$(sauce)"
+  displayName: Verification of new variables from first pipeline
