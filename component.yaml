@@ -1,10 +1,11 @@
-name: diamond-rings-cluster
+name: hello-bedrock
 subcomponents:
-- name: diamond-rings
+- name: hello-bedrock
   type: component
-  source: https://github.com/samiyaakhtar/diamond-rings-hld
+  source: https://github.com/samiyaakhtar/hello-bedrock
   method: git
   branch: master
+  path: ring
 - name: ring-operator
   type: component
   source: https://github.com/samiyaakhtar/ring-operator
