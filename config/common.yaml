@@ -8,3 +8,4 @@ subcomponents:
     config:
       image:
         repository: image.tag
+        tag: hello-bedrock-master-5059
