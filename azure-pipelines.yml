@@ -51,6 +51,6 @@ steps:
 
     commitId=$(Build.SourceVersion)
     commitId=$(echo "${commitId:0:7}")
-    echo "python update_manifest_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $commitId p3 $(Build.BuildId)"
-    python update_manifest_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $commitId p3 $(Build.BuildId)
+    echo "python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) hldCommitId $commitId p3 $(Build.BuildId)"
+    python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) hldCommitId $commitId p3 $(Build.BuildId)
   displayName: Update manifest pipeline details in CJ db
