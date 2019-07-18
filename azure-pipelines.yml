@@ -30,11 +30,15 @@ steps:
 - bash: |
     curl $CJ_SCRIPT > hld_to_manifest.sh
     chmod +x ./hld_to_manifest.sh
-    ./hld_to_manifest.sh
-  displayName: Download and run CJ script
+    # ./hld_to_manifest.sh
+  displayName: Download CJ script
   env:
     CJ_SCRIPT: https://raw.githubusercontent.com/samiyaakhtar/container-journey/python_scripts/pipeline-scripts/hld_to_manifest.sh
 
+- task: ShellScript@2
+  displayName: Run CJ script
+  inputs:
+    scriptPath: hld_to_manifest.sh
   
 - bash: |
     curl $BEDROCK_BUILD_SCRIPT > build.sh
