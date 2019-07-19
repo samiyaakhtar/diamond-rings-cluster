@@ -191,7 +191,7 @@ function git_commit() {
     else
         echo "NOTHING TO COMMIT"
     fi
-    latest_commit=$(git rev-parse --short HEAD)
+    export latest_commit=$(git rev-parse --short HEAD)
     echo "latest_commit=$latest_commit"
     echo '##vso[task.setvariable variable=latest_commit]$latest_commit'
 
