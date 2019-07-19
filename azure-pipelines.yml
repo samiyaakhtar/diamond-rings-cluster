@@ -68,7 +68,7 @@ steps:
 
 - bash: |
     # latest_commit=$(git rev-parse --short HEAD)
-    echo "latest_commit=$(latest_commit)"
+    echo "latest_commit=$latest_commit"
     ls 
     pwd
   displayName: Update commit id in database
