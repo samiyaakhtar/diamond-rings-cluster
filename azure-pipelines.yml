@@ -67,6 +67,7 @@ steps:
 #     BRANCH_NAME: $(Build.SourceBranchName)
 
 - bash: |
+    chmod +x ./build.sh
     ./build.sh
     echo "latest_commit=$latest_commit $(latest_commit)"
     ls 
