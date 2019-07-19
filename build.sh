@@ -187,13 +187,13 @@ function git_commit() {
     if [[ $(git status --porcelain) ]]; then
         echo "GIT COMMIT"
         git commit -m "Updated k8s manifest files post commit: $COMMIT_MESSAGE"
-        latest_commit=$(git rev-parse --short HEAD)
-        echo "latest_commit=$latest_commit"
-        echo '##vso[task.setvariable variable=latest_commit]$latest_commit'
         retVal=$? && [ $retVal -ne 0 ] && exit $retVal
     else
         echo "NOTHING TO COMMIT"
     fi
+    latest_commit=$(git rev-parse --short HEAD)
+    echo "latest_commit=$latest_commit"
+    echo '##vso[task.setvariable variable=latest_commit]$latest_commit'
 
     echo "GIT PULL origin $BRANCH_NAME"
     git pull origin "$BRANCH_NAME"
