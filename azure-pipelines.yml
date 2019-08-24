@@ -9,43 +9,34 @@ steps:
   persistCredentials: true
   clean: true
 
+# - bash: |
+#     git clone https://github.com/samiyaakhtar/container-journey.git
+#     cd container-journey/pipeline-scripts
+
+#     sudo /usr/bin/easy_install virtualenv
+#     pip install virtualenv 
+#     pip install --upgrade pip
+#     python -m virtualenv venv
+#     source venv/bin/activate
+#     python -m pip install --upgrade pip
+#     pip install -r requirements.txt
+
+#     commitId=$(Build.SourceVersion)
+#     commitId=$(echo "${commitId:0:7}")
+#     echo "python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $(PARTITION_KEY) hldCommitId $commitId p3 $(Build.BuildId)"
+#     python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $(PARTITION_KEY) hldCommitId $commitId p3 $(Build.BuildId)
+#   displayName: Update manifest pipeline details in CJ db
+
+
 - bash: |
-    git clone https://github.com/samiyaakhtar/container-journey.git
-    cd container-journey/pipeline-scripts
-
-    sudo /usr/bin/easy_install virtualenv
-    pip install virtualenv 
-    pip install --upgrade pip
-    python -m virtualenv venv
-    source venv/bin/activate
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-
     commitId=$(Build.SourceVersion)
     commitId=$(echo "${commitId:0:7}")
-    echo "python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $(PARTITION_KEY) hldCommitId $commitId p3 $(Build.BuildId)"
-    python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $(PARTITION_KEY) hldCommitId $commitId p3 $(Build.BuildId)
-  displayName: Update manifest pipeline details in CJ db
+    all_data="{\"account_key\": \"$(ACCOUNT_KEY)\", \"account_name\": \"$(ACCOUNT_NAME)\", \"table_name\": \"$(TABLE_NAME)\", \"partition_key\": \"$(PARTITION_KEY)\", \"filter_name\": \"hldCommitId\", \"filter_value\": \"$commitId\", \"name1\": \"p3\", \"value1\": \"$(Build.BuildId)\" }"
+    echo $all_data
+    echo "curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header \"Content-type: application/json\"  --data $all_data"
+    curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header "Content-type: application/json"  --data "$all_data"
+  displayName: Update source pipeline details in Spektate
 
-# - bash: |
-#     curl $CJ_SCRIPT > hld_to_manifest.sh
-#     chmod +x ./hld_to_manifest.sh
-#     # ./hld_to_manifest.sh
-#   displayName: Download CJ script
-#   env:
-#     CJ_SCRIPT: https://raw.githubusercontent.com/samiyaakhtar/container-journey/python_scripts/pipeline-scripts/hld_to_manifest.sh
-
-# - task: ShellScript@2
-#   displayName: Run CJ script
-#   inputs:
-#     scriptPath: hld_to_manifest.sh
-  
-# - bash: |
-#     curl $BEDROCK_BUILD_SCRIPT > build.sh
-#     chmod +x ./build.sh
-#   displayName: Download Bedrock orchestration script
-#   env:
-#     BEDROCK_BUILD_SCRIPT: https://raw.githubusercontent.com/microsoft/bedrock/ecaea986e7a415e20f27aa9ff2f4d7660cf84174/gitops/azure-devops/build.sh
 
 - task: ShellScript@2
   displayName: Validate fabrikate definitions
@@ -66,12 +57,20 @@ steps:
     REPO: $(MANIFEST_REPO)
     BRANCH_NAME: $(Build.SourceBranchName)
     
-- script: |
-    cd "$HOME"
-    cd hello-bedrock-manifest
+# - script: |
+#     cd "$HOME"
+#     cd hello-bedrock-manifest
+#     latest_commit=$(git rev-parse --short HEAD)
+#     cd ../container-journey/pipeline-scripts
+#     source venv/bin/activate
+#     echo "python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $(PARTITION_KEY) p3 $(Build.BuildId) manifestCommitId $latest_commit"
+#     python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $(PARTITION_KEY) p3 $(Build.BuildId) manifestCommitId $latest_commit
+#   displayName: Update commit id in database
+
+- bash: |
     latest_commit=$(git rev-parse --short HEAD)
-    cd ../container-journey/pipeline-scripts
-    source venv/bin/activate
-    echo "python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $(PARTITION_KEY) p3 $(Build.BuildId) manifestCommitId $latest_commit"
-    python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $(PARTITION_KEY) p3 $(Build.BuildId) manifestCommitId $latest_commit
-  displayName: Update commit id in database
+    all_data="{\"account_key\": \"$(ACCOUNT_KEY)\", \"account_name\": \"$(ACCOUNT_NAME)\", \"table_name\": \"$(TABLE_NAME)\", \"partition_key\": \"$(PARTITION_KEY)\", \"filter_name\": \"p3\", \"filter_value\": \"$(Build.BuildId)\", \"name1\": \"manifestCommitId\", \"value1\": \"$latest_commit\" }"
+    echo $all_data
+    echo "curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header \"Content-type: application/json\"  --data $all_data"
+    curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header "Content-type: application/json"  --data "$all_data"
+  displayName: Update source pipeline details in Spektate
