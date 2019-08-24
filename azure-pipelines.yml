@@ -68,6 +68,8 @@ steps:
 #   displayName: Update commit id in database
 
 - bash: |
+    cd "$HOME"
+    cd hello-bedrock-manifest
     latest_commit=$(git rev-parse --short HEAD)
     all_data="{\"account_key\": \"$(ACCOUNT_KEY)\", \"account_name\": \"$(ACCOUNT_NAME)\", \"table_name\": \"$(TABLE_NAME)\", \"partition_key\": \"$(PARTITION_KEY)\", \"filter_name\": \"p3\", \"filter_value\": \"$(Build.BuildId)\", \"name1\": \"manifestCommitId\", \"value1\": \"$latest_commit\" }"
     echo $all_data
