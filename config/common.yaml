@@ -3,4 +3,4 @@ subcomponents:
     config:
       image:
         repository: hellorings.azurecr.io
-        tag: hello-bedrock-master-6870
+        tag: hello-bedrock-master-6871
