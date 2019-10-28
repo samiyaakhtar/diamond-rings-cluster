@@ -28,14 +28,25 @@ steps:
 #   displayName: Update manifest pipeline details in CJ db
 
 
-# - bash: |
-#     commitId=$(Build.SourceVersion)
-#     commitId=$(echo "${commitId:0:7}")
-#     all_data="{\"account_key\": \"$(ACCOUNT_KEY)\", \"account_name\": \"$(ACCOUNT_NAME)\", \"table_name\": \"$(TABLE_NAME)\", \"partition_key\": \"$(PARTITION_KEY)\", \"filter_name\": \"hldCommitId\", \"filter_value\": \"$commitId\", \"name1\": \"p3\", \"value1\": \"$(Build.BuildId)\" }"
-#     echo $all_data
-#     echo "curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header \"Content-type: application/json\"  --data $all_data"
-#     curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header "Content-type: application/json"  --data "$all_data"
-#   displayName: Update source pipeline details in Spektate
+- bash: |
+    commitId=$(Build.SourceVersion)
+    commitId=$(echo "${commitId:0:7}")
+    # all_data="{\"account_key\": \"$(ACCOUNT_KEY)\", \"account_name\": \"$(ACCOUNT_NAME)\", \"table_name\": \"$(TABLE_NAME)\", \"partition_key\": \"$(PARTITION_KEY)\", \"filter_name\": \"hldCommitId\", \"filter_value\": \"$commitId\", \"name1\": \"p3\", \"value1\": \"$(Build.BuildId)\" }"
+    # echo $all_data
+    # echo "curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header \"Content-type: application/json\"  --data $all_data"
+    # curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header "Content-type: application/json"  --data "$all_data"
+
+     
+    git clone https://github.com/samiyaakhtar/spk.git
+    cd spk
+    git checkout 704-pipeline-update-command
+    yarn
+    yarn build
+    cd dist
+    chmod +x ./spk-linux
+
+    ./spk-linux deployment create -n $(ACCOUNT_NAME) -k $(ACCOUNT_KEY) -t $(TABLE_NAME) -p $(PARTITION_KEY) --p3 $(Build.BuildId) --hld-commit-id $commitId
+  displayName: Update source pipeline details in Spektate
 
 
 - task: ShellScript@2
@@ -93,6 +104,6 @@ steps:
     cd dist
     chmod +x ./spk-linux
 
-    ./spk-linux deployment create -n $(ACCOUNT_NAME) -k $(ACCOUNT_KEY) -t $(TABLE_NAME) -p $(PARTITION_KEY) --p3 $(Build.BuildId) --manifest-commit-id $latest_commit --hld-commit-id $(Build.BuildId)
+    ./spk-linux deployment create -n $(ACCOUNT_NAME) -k $(ACCOUNT_KEY) -t $(TABLE_NAME) -p $(PARTITION_KEY) --p3 $(Build.BuildId) --manifest-commit-id $latest_commit
   displayName: Update manifest pipeline details in CJ db
   
