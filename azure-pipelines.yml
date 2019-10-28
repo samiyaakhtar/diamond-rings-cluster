@@ -28,14 +28,14 @@ steps:
 #   displayName: Update manifest pipeline details in CJ db
 
 
-- bash: |
-    commitId=$(Build.SourceVersion)
-    commitId=$(echo "${commitId:0:7}")
-    all_data="{\"account_key\": \"$(ACCOUNT_KEY)\", \"account_name\": \"$(ACCOUNT_NAME)\", \"table_name\": \"$(TABLE_NAME)\", \"partition_key\": \"$(PARTITION_KEY)\", \"filter_name\": \"hldCommitId\", \"filter_value\": \"$commitId\", \"name1\": \"p3\", \"value1\": \"$(Build.BuildId)\" }"
-    echo $all_data
-    echo "curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header \"Content-type: application/json\"  --data $all_data"
-    curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header "Content-type: application/json"  --data "$all_data"
-  displayName: Update source pipeline details in Spektate
+# - bash: |
+#     commitId=$(Build.SourceVersion)
+#     commitId=$(echo "${commitId:0:7}")
+#     all_data="{\"account_key\": \"$(ACCOUNT_KEY)\", \"account_name\": \"$(ACCOUNT_NAME)\", \"table_name\": \"$(TABLE_NAME)\", \"partition_key\": \"$(PARTITION_KEY)\", \"filter_name\": \"hldCommitId\", \"filter_value\": \"$commitId\", \"name1\": \"p3\", \"value1\": \"$(Build.BuildId)\" }"
+#     echo $all_data
+#     echo "curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header \"Content-type: application/json\"  --data $all_data"
+#     curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header "Content-type: application/json"  --data "$all_data"
+#   displayName: Update source pipeline details in Spektate
 
 
 - task: ShellScript@2
@@ -68,12 +68,31 @@ steps:
 #     python update_pipeline.py $(ACCOUNT_NAME) $(ACCOUNT_KEY) $(TABLE_NAME) $(PARTITION_KEY) p3 $(Build.BuildId) manifestCommitId $latest_commit
 #   displayName: Update commit id in database
 
+# - bash: |
+#     cd "$HOME"
+#     cd hello-bedrock-manifest
+#     latest_commit=$(git rev-parse --short HEAD)
+#     all_data="{\"account_key\": \"$(ACCOUNT_KEY)\", \"account_name\": \"$(ACCOUNT_NAME)\", \"table_name\": \"$(TABLE_NAME)\", \"partition_key\": \"$(PARTITION_KEY)\", \"filter_name\": \"p3\", \"filter_value\": \"$(Build.BuildId)\", \"name1\": \"manifestCommitId\", \"value1\": \"$latest_commit\" }"
+#     echo $all_data
+#     echo "curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header \"Content-type: application/json\"  --data $all_data"
+#     curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header "Content-type: application/json"  --data "$all_data"
+#   displayName: Update source pipeline details in Spektate
 - bash: |
     cd "$HOME"
     cd hello-bedrock-manifest
     latest_commit=$(git rev-parse --short HEAD)
-    all_data="{\"account_key\": \"$(ACCOUNT_KEY)\", \"account_name\": \"$(ACCOUNT_NAME)\", \"table_name\": \"$(TABLE_NAME)\", \"partition_key\": \"$(PARTITION_KEY)\", \"filter_name\": \"p3\", \"filter_value\": \"$(Build.BuildId)\", \"name1\": \"manifestCommitId\", \"value1\": \"$latest_commit\" }"
-    echo $all_data
-    echo "curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header \"Content-type: application/json\"  --data $all_data"
-    curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header "Content-type: application/json"  --data "$all_data"
-  displayName: Update source pipeline details in Spektate
+    
+    # VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/CatalystCode/spk/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
+    # echo "Downloading SPK version $VERSION_TO_DOWNLOAD" && wget "https://github.com/CatalystCode/spk/releases/download/$VERSION_TO_DOWNLOAD/spk-linux"
+    
+    git clone https://github.com/samiyaakhtar/spk.git
+    cd spk
+    git checkout 704-pipeline-update-command
+    yarn
+    yarn build
+    cd dist
+    chmod +x ./spk-linux
+
+    ./spk-linux deployment create -n $(ACCOUNT_NAME) -k $(ACCOUNT_KEY) -t $(TABLE_NAME) -p $(PARTITION_KEY) --p3 $(Build.BuildId) --manifest-commit-id $latest_commit --hld-commit-id $(Build.BuildId)
+  displayName: Update manifest pipeline details in CJ db
+  
