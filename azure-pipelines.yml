@@ -39,14 +39,14 @@ steps:
      
     git clone https://github.com/samiyaakhtar/spk.git
     cd spk
-    git checkout 704-pipeline-update-command
+    git checkout repository-in-create-command
     yarn
     yarn build
     cd dist
     chmod +x ./spk-linux
 
     ./spk-linux deployment create -n $(ACCOUNT_NAME) -k $(ACCOUNT_KEY) -t $(TABLE_NAME) -p $(PARTITION_KEY) --p3 $(Build.BuildId) --hld-commit-id $commitId
-  displayName: Update source pipeline details in Spektate
+  displayName: Update manifest pipeline details in Spektate
 
 
 - task: ShellScript@2
