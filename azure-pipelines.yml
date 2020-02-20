@@ -37,9 +37,9 @@ steps:
     # curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header "Content-type: application/json"  --data "$all_data"
 
      
-    git clone https://github.com/samiyaakhtar/spk.git
+    git clone https://github.com/CatalystCode/spk.git
     cd spk
-    git checkout repository-in-create-command
+    git checkout refactorDeploymentTableTs
     yarn
     yarn build
     cd dist
@@ -98,14 +98,14 @@ steps:
     # VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/CatalystCode/spk/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
     # echo "Downloading SPK version $VERSION_TO_DOWNLOAD" && wget "https://github.com/CatalystCode/spk/releases/download/$VERSION_TO_DOWNLOAD/spk-linux"
     echo $repourl
-    git clone https://github.com/samiyaakhtar/spk.git
+    git clone https://github.com/CatalystCode/spk.git
     cd spk
-    git checkout repository-in-create-command
+    git checkout refactorDeploymentTableTs
     yarn
     yarn build
     cd dist
     chmod +x ./spk-linux
 
-    ./spk-linux deployment create -n $(ACCOUNT_NAME) -k $(ACCOUNT_KEY) -t $(TABLE_NAME) -p $(PARTITION_KEY) --p3 $(Build.BuildId) --manifest-commit-id $latest_commit --repository $repourl
+    ./spk-linux deployment create -n $(ACCOUNT_NAME) -k $(ACCOUNT_KEY) -t $(TABLE_NAME) -p $(PARTITION_KEY) --p3 $(Build.BuildId) --manifest-commit-id $latest_commit
   displayName: Update manifest pipeline details in CJ db
   
