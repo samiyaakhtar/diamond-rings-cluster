@@ -37,9 +37,8 @@ steps:
     # curl https://spektateprototypefunc.azurewebsites.net/api/UpdatePipelineStorage  --request POST  --header "Content-type: application/json"  --data "$all_data"
 
      
-    git clone https://github.com/samiyaakhtar/spk.git
+    git clone https://github.com/CatalystCode/spk.git
     cd spk
-    git checkout repository-in-create-command
     yarn
     yarn build
     cd dist
@@ -98,9 +97,8 @@ steps:
     # VERSION_TO_DOWNLOAD=$(curl -s "https://api.github.com/repos/CatalystCode/spk/releases/latest" | grep "tag_name" | sed -E 's/.*"([^"]+)".*/\1/')
     # echo "Downloading SPK version $VERSION_TO_DOWNLOAD" && wget "https://github.com/CatalystCode/spk/releases/download/$VERSION_TO_DOWNLOAD/spk-linux"
     echo $repourl
-    git clone https://github.com/samiyaakhtar/spk.git
+    git clone https://github.com/CatalystCode/spk.git
     cd spk
-    git checkout repository-in-create-command
     yarn
     yarn build
     cd dist
